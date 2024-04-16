@@ -3,7 +3,7 @@ import { z } from 'zod'
 // ---------------------------------------------------------------------------------------------------------
 export const uuidSchemas = z.string().uuid()
 export const questionSchemas = z.string().trim().min(1);
-export const optionsSchemas = z.object({ uuid: uuidSchemas, text: z.string(), isCurrentAnswer: z.boolean().default(false) }).array().min(2);
+export const optionsSchemas = z.object({ uuid: uuidSchemas, text: z.string(), isCurrentAnswer: z.boolean().default(false), error: z.boolean().default(false) }).array().min(2);
 // ---------------------------------------------------------------------------------------------------------
 
 // ---------------------------------------------------------------------------------------------------------
@@ -13,7 +13,11 @@ export type OptionsType = z.infer<typeof optionsSchemas>
 // ---------------------------------------------------------------------------------------------------------
 
 // ---------------------------------------------------------------------------------------------------------
-export const ItemQuestionSchemas = z.object({ uuid: uuidSchemas, question: questionSchemas, options: optionsSchemas })
+export const ItemQuestionSchemas = z.object({
+    uuid: uuidSchemas,
+    question: questionSchemas,
+    options: optionsSchemas
+})
 export type ItemQuestionType = z.infer<typeof ItemQuestionSchemas>
 // ---------------------------------------------------------------------------------------------------------
 

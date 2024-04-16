@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useFieldArray, useForm, Controller, useWatch } from "react-hook-form";
@@ -17,10 +18,13 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "./ui/label";
+import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 
 export const CreateQuestions = () => {
+  const [isDisableAddOption, setIsDisableAddOption] = useState<boolean>(false)
+  const [isDisableCreateButton, setIsDisableCreateButton] = useState<boolean>(false)
+
   const form = useForm<ItemQuestionType>({
     resolver: zodResolver(ItemQuestionSchemas),
     defaultValues: {
@@ -36,28 +40,26 @@ export const CreateQuestions = () => {
   });
 
   // ############################## CHECKING VALUES ##############################
-  const r = useWatch({ control: form.control, name: "options" });
+  // const question = useWatch({ control: form.control, name: "question" })
+  // let check_value_question = question?.length > 0 ? true : false
+  // console.log("check_value_question", check_value_question)
 
-  const noEmptyOptionValues = () => r.every((el) => el.text.trim() != "");
-  const allValuesOptionsUnique = () => {
-    const text = r.map((el) => el.text);
-    return new Set(text).size == r.length ? true : false;
-  };
+  const options = useWatch({ control: form.control, name: "options" })
+  const emptyValues = options.every(el => el.text.trim())
 
+
+  let repetitive: string[] = []
+
+  for (let i in options) {
+    if (repetitive.includes(options[i].text)) {
+      update(Number(i), {
+        ...options[i], error: true
+      })
+    } else {
+      repetitive.push(options[i].text)
+    }
+  }
   // ################################# HANDLERS ##################################
-  const addNewOption = () =>
-    append({ text: "", uuid: uuidv4(), isCurrentAnswer: false });
-
-  const isOptionValueUnique = (s: string) => {
-    const result = form
-      .getValues()
-      .options.filter(
-        (el) => el.text.trim().toLowerCase() == s.trim().toLowerCase()
-      ).length;
-
-    console.log(result);
-    return result;
-  };
 
   // #############################################################################
 
@@ -105,18 +107,9 @@ export const CreateQuestions = () => {
                 render={({ field }) => (
                   <Input
                     {...field}
-                    onInput={(e: React.FormEvent<HTMLInputElement>) => {
-                      isOptionValueUnique(e.currentTarget.value)
-                        ? form.setError(`options.${idx}`, {
-                            type: "custom",
-                            message: "not unique values",
-                          })
-                        : form.clearErrors(`options.${idx}`);
-                    }}
                     placeholder="Тут пиши вариант ответа"
                     className={cn({
-                      "text-red-600": form.getFieldState(`options.${idx}`)
-                        .error,
+                      "text-red-600": item.error,
                     })}
                   />
                 )}
@@ -127,31 +120,30 @@ export const CreateQuestions = () => {
                 type="button"
                 onClick={() => {
                   remove(idx);
-
-                  noEmptyOptionValues();
-                  allValuesOptionsUnique();
                 }}
               >
                 <TrashIcon />
               </Button>
             </li>
           ))}
+          {!fields.length && <p>Пока ничего нет</p>}
         </ul>
         <Button
           className="w-full"
           type="button"
-          disabled={!noEmptyOptionValues()}
+          disabled={isDisableAddOption}
           onClick={() => {
-            addNewOption();
-
-            // noEmptyOptionValues();
-            // allValuesOptionsUnique();
+            append({ text: "", uuid: uuidv4(), isCurrentAnswer: false })
           }}
         >
           Добавить вариант ответа
         </Button>
 
-        <Button type="submit" className="w-full">
+        <Button
+          type="submit"
+          className="w-full"
+          disabled={isDisableCreateButton}
+        >
           Сохранить вопрос
         </Button>
       </form>
