@@ -1,8 +1,5 @@
-export { QuestionsStore } from './questions'
+export { } from './questions'
 
-export {
-    type QuestionType,
-    QuestionSchemas,
-    singleChooseSchemas,
-    multiChooseSchemas
-} from './questions.schemas'
+export type { ItemQuestionType } from './schemas/questions.schemas'
+export { ItemQuestionSchemas } from './schemas/questions.schemas'
+
