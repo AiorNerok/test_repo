@@ -1,4 +1,4 @@
-import { CreateQuestions } from "@/components/create-questions";
+import { CreateQuestions } from "@/components/widget";
 import { createLazyFileRoute } from "@tanstack/react-router";
 
 export const Route = createLazyFileRoute("/questions/add")({

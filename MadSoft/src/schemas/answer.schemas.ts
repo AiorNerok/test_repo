@@ -5,17 +5,24 @@ const uuid = z.string().uuid()
 
 // ================================================================
 export const answerSchemas = z.object({
+    uuid: z.string().uuid(),
+    isChecked: z.boolean()
+}).array()
+
+export type answerType = z.infer<typeof answerSchemas>
+
+export const answerTestSchemas = z.object({
     uuid,
-    answer: uuid.array().min(1)
+    answer: answerSchemas
 })
 // ================================================================
 
 // ================================================================
-export type answerType = z.infer<typeof answerSchemas>
+export type answerTestType = z.infer<typeof answerTestSchemas>
 // ================================================================
 
 // ================================================================
-export const setAnswerHandlerSchemas = z.function().args(answerSchemas).returns(z.void())
+export const setAnswerHandlerSchemas = z.function().args(answerTestSchemas).returns(z.void())
 export type setAnswerHandlerType = z.infer<typeof setAnswerHandlerSchemas>
 // ================================================================
 

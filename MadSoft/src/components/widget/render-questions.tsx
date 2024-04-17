@@ -1,23 +1,31 @@
 import { useState } from "react";
-
+import { useTimer } from 'react-timer-hook'
 // import { AnswerStore } from "@/store/answer.store";
 import { QuestionStore } from "@/store/questions.store";
+import { CommonStore } from "@/store/common.store";
 
-import { Button } from "./ui/button";
-import { Timer } from "./shared/timer";
-import { ItemQuestion } from "./shared/item-question";
+import { Button } from "../ui/button";
+import { TimerFormatter } from "../shared/timer";
+import { ItemQuestion } from "../shared/item-question";
 import { ItemQuestionType } from "@/schemas/questions.schemas";
 
 export const RenderQuestions = () => {
   //   const { add } = AnswerStore();
   const { questions } = QuestionStore();
-
+  const { timer } = CommonStore()
+  // TIMER
+  const time = new Date();
+  time.setSeconds(time.getSeconds() + timer * 60);
+  const { minutes, seconds, pause, isRunning, totalSeconds } = useTimer({ expiryTimestamp: time })
+  // 
   const [count, setCount] = useState<number>(0);
   const [currentQuestion, setCurrentQuestion] = useState(questions[0]);
 
   const completeTest = () => {
     if (document.fullscreenElement) {
       document.exitFullscreen();
+      pause()
+      console.log(totalSeconds)
     }
   };
 
@@ -30,7 +38,10 @@ export const RenderQuestions = () => {
   const sequence = generateSequence(questions);
 
   const NextQuestion = () => {
-    console.log(sequence.next());
+    const { done, value } = sequence.next()
+    if (done) {
+
+    }
   };
 
   return (
@@ -43,10 +54,11 @@ export const RenderQuestions = () => {
         Завершить досрочно
       </Button>
       <div className="inline-block">
-        <Timer />
+        {JSON.stringify(isRunning)}
+        <TimerFormatter minutes={minutes} seconds={seconds} />
       </div>
       <div>
-        <ItemQuestion {...currentQuestion}  />
+        {/* <ItemQuestion {...currentQuestion} /> */}
       </div>
       <div className="mt-11">
         <Button onClick={NextQuestion}>Зафиксировать ответ</Button>

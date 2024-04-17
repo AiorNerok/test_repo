@@ -1,9 +1,9 @@
-import type { answerType, setAnswerHandlerType } from "@/schemas/answer.schemas"
+import type { answerTestType, setAnswerHandlerType } from "@/schemas/answer.schemas"
 import { answerSchemas } from "@/schemas/answer.schemas"
 import { create } from "zustand"
 
 type AnswerStoreProps = {
-    list: answerType[]
+    list: answerTestType[]
     add: setAnswerHandlerType,
     drop: () => void
 }

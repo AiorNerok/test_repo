@@ -17,7 +17,7 @@ function Questions() {
     <Card className="xl:col-span-2 my-2">
       <CardHeader className="flex flex-row items-center space-y-0 justify-between">
         <div className="grid gap-2">
-          <CardTitle>Вопросы</CardTitle>
+          <CardTitle>Список всех вопросов</CardTitle>
         </div>
         <Button asChild size="sm" className="ml-auto m-0">
           <Link to="/questions/add" className="[&.active]:font-bold">
@@ -51,6 +51,7 @@ function Questions() {
           ))}
         </ul>
       </CardContent>
+      {JSON.stringify(questions)}
     </Card>
   );
 }
