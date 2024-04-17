@@ -1,7 +1,5 @@
 import { z } from 'zod'
 
-
-
 // ---------------------------------------------------------------------------------------------------------
 export const isCurrentAnswerSchemas = z.boolean()
 export const TextSchemas = z.string().trim().min(2)

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useFieldArray, useForm, Controller, useWatch } from "react-hook-form";
-import { toast } from "sonner"
+import { toast } from "sonner";
 
 import { TrashIcon } from "@radix-ui/react-icons";
 
@@ -96,12 +96,12 @@ export const CreateQuestions = () => {
         el.question.trim().toLowerCase() == data.question.trim().toLowerCase()
     );
 
-    if (result){
-      toast.error("ERROR!!! Такой вопрос уже существует")
+    if (result) {
+      toast.error("ERROR!!! Такой вопрос уже существует");
     } else {
-      addQuestion(data)
-      form.reset()
-      toast.success("Вопрос добавлен")
+      addQuestion(data);
+      form.reset();
+      toast.success("Вопрос добавлен");
     }
   };
 
@@ -203,7 +203,6 @@ export const CreateQuestions = () => {
           Сохранить вопрос
         </Button>
       </form>
-      {JSON.stringify(questions, null, 2)}
     </Form>
   );
 };
