@@ -13,7 +13,9 @@ export const optionsSchemas = z.object({
     text: TextSchemas,
     isCurrentAnswer: isCurrentAnswerSchemas,
     error: z.boolean()
-}).array().min(2).refine(d => d.some(el => el.isCurrentAnswer))
+}).array().min(2)
+    .refine(d => d.some(el => el.isCurrentAnswer))
+    .refine(d => d.every(el => !el.error))
 // ---------------------------------------------------------------------------------------------------------
 
 // ---------------------------------------------------------------------------------------------------------
