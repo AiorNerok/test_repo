@@ -1,4 +1,4 @@
-import { QuestionnaireStore } from "@/store/questions";
+import { QuestionStore } from "@/store/questions.store";
 import { Link, createLazyFileRoute } from "@tanstack/react-router";
 
 import { PlusIcon, TrashIcon } from "@radix-ui/react-icons";
@@ -11,10 +11,10 @@ export const Route = createLazyFileRoute("/questions/")({
 });
 
 function Questions() {
-  const { questions, removeQuestion } = QuestionnaireStore();
+  const { questions, removeQuestion } = QuestionStore();
 
   return (
-    <Card className="xl:col-span-2">
+    <Card className="xl:col-span-2 my-2">
       <CardHeader className="flex flex-row items-center space-y-0 justify-between">
         <div className="grid gap-2">
           <CardTitle>Вопросы</CardTitle>

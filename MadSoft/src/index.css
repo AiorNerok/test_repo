@@ -66,6 +66,10 @@
   }
 }
 
+html {
+  background: aliceblue;
+}
+
 @layer base {
   * {
     @apply border-border;

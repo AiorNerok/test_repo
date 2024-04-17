@@ -3,11 +3,11 @@ import { v4 as uuidv4 } from "uuid";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useFieldArray, useForm, Controller, useWatch } from "react-hook-form";
 import { toast } from "sonner";
-
 import { TrashIcon } from "@radix-ui/react-icons";
 
-import type { ItemQuestionType } from "@/store";
-import { ItemQuestionSchemas } from "@/store";
+import type { ItemQuestionType } from "@/schemas/questions.schemas";
+import { ItemQuestionSchemas, TextSchemas } from "@/schemas/questions.schemas";
+import { QuestionStore } from "@/store/questions.store";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -21,16 +21,14 @@ import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
-import { TextSchemas } from "@/store/schemas/questions.schemas";
-
-import { QuestionnaireStore } from "@/store/questions";
+import { useNavigate } from "@tanstack/react-router";
 
 export const CreateQuestions = () => {
+  const navigate = useNavigate();
   const [isDisableAddOption, setIsDisableAddOption] = useState<boolean>(false);
   const [isDisableCreateButton, setIsDisableCreateButton] =
     useState<boolean>(true);
-
-  const { addQuestion, questions } = QuestionnaireStore();
+  const { addQuestion, questions } = QuestionStore();
 
   const form = useForm<ItemQuestionType>({
     resolver: zodResolver(ItemQuestionSchemas),
@@ -102,6 +100,11 @@ export const CreateQuestions = () => {
       addQuestion(data);
       form.reset();
       toast.success("Вопрос добавлен");
+
+      navigate({
+        to: "/questions",
+        replace: true,
+      });
     }
   };
 

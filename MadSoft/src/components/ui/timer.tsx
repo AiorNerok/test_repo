@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 
 type TimerProps = {
-  time: number;
+  time?: number;
 };
 
-export const Timer = ({ time }: TimerProps) => {
+export const Timer = ({ time = 20 }: TimerProps) => {
   const [timer, setTimer] = useState<number>(time * 60);
 
   useEffect(() => {

@@ -1,20 +1,20 @@
 import { cn } from "@/lib/utils";
-import { QuestionnaireStore } from "@/store/questions";
 import { createRootRoute, Link, Outlet } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/router-devtools";
+
+import { CommonStore } from "@/store/common.store";
 
 export const Route = createRootRoute({
   component: Nav,
 });
 
 function Nav() {
-  const { isStatredStatus } = QuestionnaireStore();
-
+  const { isTestStarted } = CommonStore();
   return (
     <div className={cn("flex flex-col w-full")}>
       <div
         className={cn("p-2 flex gap-2", {
-          hidden: isStatredStatus,
+          hidden: isTestStarted,
         })}
       >
         <Link to="/" className="[&.active]:font-bold">
@@ -26,8 +26,8 @@ function Nav() {
         <Link to="/about" className="[&.active]:font-bold">
           About
         </Link>
+        <hr />
       </div>
-      <hr />
       <Outlet />
       <TanStackRouterDevtools />
     </div>
