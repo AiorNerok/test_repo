@@ -26,6 +26,8 @@ type QuestionnaireStoreProps = {
     removeQuestion: removeQuestionType,
     dropQuestion: dropQuestionType
 
+    isStatredStatus: boolean,
+    setStatredStatus: () => void
 }
 
 export const QuestionnaireStore = create<QuestionnaireStoreProps>()((set, get) => ({
@@ -80,4 +82,9 @@ export const QuestionnaireStore = create<QuestionnaireStoreProps>()((set, get) =
         }
     },
     dropQuestion: () => ({ questions: [] }),
+
+    isStatredStatus: false,
+    setStatredStatus: () => set({
+        isStatredStatus: true
+    })
 }))
