@@ -51,7 +51,6 @@ function Questions() {
           ))}
         </ul>
       </CardContent>
-      {JSON.stringify(questions)}
     </Card>
   );
 }

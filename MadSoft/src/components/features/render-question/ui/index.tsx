@@ -87,9 +87,13 @@ export const RenderQuestion = ({ question, options, uuid }: RenderQuestionProps)
                 }
             </CardContent>
             <CardFooter>
-                <Button onClick={() => add({
-                    uuid, answer: { ...answer }
-                })}>Ответить</Button>
+                <Button
+                    onClick={
+                        () => add({
+                            uuid, answer: { ...answer }
+                        })
+                    }
+                >Ответить</Button>
             </CardFooter>
         </Card>
     )

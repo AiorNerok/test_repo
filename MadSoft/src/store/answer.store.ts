@@ -12,7 +12,7 @@ export const AnswerStore = create<AnswerStoreProps>()((set) => ({
     list: [],
     add: (item) => (() => {
         const _new_list = []
-
+        console.log("store.nswer", item)
         const result = answerSchemas.safeParse(item)
 
         if (result.success) {
