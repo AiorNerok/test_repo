@@ -1,9 +1,19 @@
 import { z } from 'zod'
 
+
+
+// ---------------------------------------------------------------------------------------------------------
+export const isCurrentAnswerSchemas = z.boolean()
+export const TextSchemas = z.string().trim().min(2)
 // ---------------------------------------------------------------------------------------------------------
 export const uuidSchemas = z.string().uuid()
 export const questionSchemas = z.string().trim().min(1);
-export const optionsSchemas = z.object({ uuid: uuidSchemas, text: z.string(), isCurrentAnswer: z.boolean().default(false), error: z.boolean().default(false) }).array().min(2);
+export const optionsSchemas = z.object({
+    uuid: uuidSchemas,
+    text: TextSchemas,
+    isCurrentAnswer: isCurrentAnswerSchemas,
+    error: z.boolean()
+}).array().min(2).refine(d => d.some(el => el.isCurrentAnswer))
 // ---------------------------------------------------------------------------------------------------------
 
 // ---------------------------------------------------------------------------------------------------------

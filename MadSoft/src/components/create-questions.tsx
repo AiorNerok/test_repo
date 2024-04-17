@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useFieldArray, useForm, Controller, useWatch } from "react-hook-form";
+import { toast } from "sonner"
 
 import { TrashIcon } from "@radix-ui/react-icons";
 
@@ -20,10 +21,16 @@ import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
+import { TextSchemas } from "@/store/schemas/questions.schemas";
+
+import { QuestionnaireStore } from "@/store/questions";
 
 export const CreateQuestions = () => {
-  const [isDisableAddOption, setIsDisableAddOption] = useState<boolean>(false)
-  const [isDisableCreateButton, setIsDisableCreateButton] = useState<boolean>(false)
+  const [isDisableAddOption, setIsDisableAddOption] = useState<boolean>(false);
+  const [isDisableCreateButton, setIsDisableCreateButton] =
+    useState<boolean>(true);
+
+  const { addQuestion, questions } = QuestionnaireStore();
 
   const form = useForm<ItemQuestionType>({
     resolver: zodResolver(ItemQuestionSchemas),
@@ -40,28 +47,63 @@ export const CreateQuestions = () => {
   });
 
   // ############################## CHECKING VALUES ##############################
-  // const question = useWatch({ control: form.control, name: "question" })
-  // let check_value_question = question?.length > 0 ? true : false
-  // console.log("check_value_question", check_value_question)
+  const question = useWatch({ control: form.control, name: "question" });
+  const options = useWatch({ control: form.control, name: "options" });
 
-  const options = useWatch({ control: form.control, name: "options" })
-  const emptyValues = options.every(el => el.text.trim())
-
-
-  let repetitive: string[] = []
-
-  for (let i in options) {
-    if (repetitive.includes(options[i].text)) {
-      update(Number(i), {
-        ...options[i], error: true
-      })
-    } else {
-      repetitive.push(options[i].text)
-    }
-  }
   // ################################# HANDLERS ##################################
+  const isUniqueValue = (t: string) => {
+    return options.some(
+      (el) => el.text.trim().toLowerCase() == t.trim().toLowerCase()
+    );
+  };
 
-  // #############################################################################
+  const checkUniqueValues = () => {
+    if (options.length < 2) return;
+
+    const stack: string[] = [];
+
+    options.forEach((el, idx) => {
+      if (stack.includes(el.text.trim().toLowerCase())) {
+        update(idx, { ...el, error: true });
+      } else {
+        update(idx, { ...el, error: false });
+      }
+      stack.push(el.text);
+    });
+  };
+
+  useEffect(() => {
+    const result = options.every((el) => {
+      return TextSchemas.safeParse(el.text).success;
+    });
+    result ? setIsDisableAddOption(false) : setIsDisableAddOption(true);
+  }, [options]);
+
+  useEffect(() => {
+    const main_check = ItemQuestionSchemas.safeParse(form.getValues());
+    if (main_check.success) {
+      setIsDisableCreateButton(false);
+    } else {
+      setIsDisableCreateButton(true);
+    }
+  }, [question, options, form]);
+
+  const AddNewQuestion = () => {
+    const data = form.getValues();
+
+    const result = questions.some(
+      (el) =>
+        el.question.trim().toLowerCase() == data.question.trim().toLowerCase()
+    );
+
+    if (result){
+      toast.error("ERROR!!! Такой вопрос уже существует")
+    } else {
+      addQuestion(data)
+      form.reset()
+      toast.success("Вопрос добавлен")
+    }
+  };
 
   return (
     <Form {...form}>
@@ -111,14 +153,19 @@ export const CreateQuestions = () => {
                     className={cn({
                       "text-red-600": item.error,
                     })}
+                    onInput={(e) => {
+                      const result = isUniqueValue(e.currentTarget.value);
+                      update(idx, { ...item, error: result });
+                    }}
                   />
                 )}
                 control={form.control}
               />
-              {form.formState.errors.options?.message}
+
               <Button
                 type="button"
                 onClick={() => {
+                  checkUniqueValues();
                   remove(idx);
                 }}
               >
@@ -133,7 +180,13 @@ export const CreateQuestions = () => {
           type="button"
           disabled={isDisableAddOption}
           onClick={() => {
-            append({ text: "", uuid: uuidv4(), isCurrentAnswer: false })
+            setIsDisableAddOption(true);
+            append({
+              text: "",
+              uuid: uuidv4(),
+              isCurrentAnswer: false,
+              error: false,
+            });
           }}
         >
           Добавить вариант ответа
@@ -143,10 +196,14 @@ export const CreateQuestions = () => {
           type="submit"
           className="w-full"
           disabled={isDisableCreateButton}
+          onClick={() => {
+            AddNewQuestion();
+          }}
         >
           Сохранить вопрос
         </Button>
       </form>
+      {JSON.stringify(questions, null, 2)}
     </Form>
   );
 };

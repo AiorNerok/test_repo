@@ -56,7 +56,6 @@ export const QuestionnaireStore = create<QuestionnaireStoreProps>()((set, get) =
 
             if (result.success) {
                 const _old = get().questions
-
                 set({
                     questions: [..._old, question]
                 })
