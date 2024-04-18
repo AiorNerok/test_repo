@@ -24,6 +24,34 @@ export type EmptyFunctionType = z.infer<typeof EmptyFunctionSchemas>
 // =====================================================================================================
 export const TimeDurationSchemas = z.number().positive()
 export type TimeDurationType = z.infer<typeof TimeDurationSchemas>
-
+// =====================================================================================================
 export const SetTimeDurationSchemas = z.function().args(TimeDurationSchemas).returns(z.void())
 export type SetTimeDurationType = z.infer<typeof SetTimeDurationSchemas>
+// =====================================================================================================
+
+
+
+export const QuestionUuidSchemas = z.string().uuid()
+export const QuestionTextSchemas = z.string().min(2)
+export const QuestionOptionIsTrueSchemas = z.boolean()
+
+export const OptionBaseSchemas = z.object({
+    uuid: QuestionUuidSchemas,
+    text: QuestionTextSchemas,
+    isTrue: QuestionOptionIsTrueSchemas
+})
+
+export const QuestionSchemas = z.object({
+    uuid: QuestionUuidSchemas,
+    text: QuestionTextSchemas,
+    options: OptionBaseSchemas.array()
+})
+
+
+export function GenerateBaseSchemas<T extends z.ZodTypeAny>(itemSchema: T) {
+    return z.object({
+        uuid: QuestionUuidSchemas,
+        text: QuestionTextSchemas,
+        option: itemSchema.array()
+    })
+}

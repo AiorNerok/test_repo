@@ -29,7 +29,15 @@ export const TestingStage = () => {
     } else if (questions.length > list.length) {
       setCurrentQuestion(list.length);
     }
-  }, [list, nextStage, questions.length]);
+  }, [
+    list,
+    nextStage,
+    pause,
+    questions.length,
+    setTimeDuration,
+    timer,
+    totalSeconds,
+  ]);
 
   return (
     <>

@@ -1,4 +1,4 @@
-import { CreateQuestions } from "@/components/widget";
+import { CreateQuestion } from "@/components/features";
 import { createLazyFileRoute } from "@tanstack/react-router";
 
 export const Route = createLazyFileRoute("/questions/add")({
@@ -8,7 +8,7 @@ export const Route = createLazyFileRoute("/questions/add")({
 function Add() {
   return (
     <div className="p-2">
-      <CreateQuestions />
+      <CreateQuestion />
     </div>
   );
 }

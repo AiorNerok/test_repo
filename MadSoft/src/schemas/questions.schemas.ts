@@ -41,3 +41,26 @@ export type addQuestionType = z.infer<typeof addQuestion>
 export type removeQuestionType = z.infer<typeof removeQuestion>
 export type dropQuestionType = z.infer<typeof dropQuestion>
 // ---------------------------------------------------------------------------------------------------------
+
+
+// =========================================================================================================
+import { OptionBaseSchemas, GenerateBaseSchemas } from './common.schemas';
+
+const OptionWithErrorState = OptionBaseSchemas.merge(z.object({
+    error: z.boolean()
+}))
+
+export const ForCreateQuestionSchemas = GenerateBaseSchemas(OptionWithErrorState)
+export const CreateNewQuestionSchemas = GenerateBaseSchemas(OptionBaseSchemas)
+export const QuestionItemSchemas = GenerateBaseSchemas(OptionBaseSchemas)
+
+
+export type QuestionItemType = z.infer<typeof QuestionItemSchemas>
+export type ForCreateQuestionType = z.infer<typeof ForCreateQuestionSchemas>
+export type CreateNewQuestionType = z.infer<typeof CreateNewQuestionSchemas>
+
+export const QuestionListSchemas = QuestionItemSchemas.array()
+export type QuestionListType = z.infer<typeof QuestionListSchemas>
+
+export const AppendNewQuestionStoreSchemas = z.function().args(CreateNewQuestionSchemas).returns(z.void())
+export type AppendNewQuestionStoreType = z.infer<typeof AppendNewQuestionStoreSchemas>

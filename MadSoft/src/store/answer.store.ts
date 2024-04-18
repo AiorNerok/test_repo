@@ -1,11 +1,10 @@
 import { SetTimeDurationType, TimeDurationType } from './../schemas/common.schemas';
-import type { answerTestType, setAnswerHandlerType } from "@/schemas/answer.schemas"
-import { answerTestSchemas } from "@/schemas/answer.schemas"
+import { AnswerItemBaseSchemas, type AddAnswer, type AnswerItemBaseType } from "@/schemas/answer.schemas"
 import { create } from "zustand"
 
 type AnswerStoreProps = {
-    list: answerTestType[]
-    add: setAnswerHandlerType,
+    list: AnswerItemBaseType[]
+    add: AddAnswer,
     drop: () => void,
 
     timeDuration: TimeDurationType,
@@ -16,7 +15,7 @@ export const AnswerStore = create<AnswerStoreProps>()((set, get) => ({
     list: [],
     add: (item) => {
         const _list = get().list
-        const result = answerTestSchemas.safeParse(item)
+        const result = AnswerItemBaseSchemas.safeParse(item)
 
         if (result.success) {
             set({

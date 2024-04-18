@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { AnswerStore } from "@/store/answer.store";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   Card,
@@ -12,62 +11,52 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-import { ItemQuestionType } from "@/schemas/questions.schemas";
+import { QuestionItemType } from "@/schemas/questions.schemas";
 import { checkEnum } from "@/schemas/common.schemas";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { answerType } from "@/schemas/answer.schemas";
+import { AnswerOptionBaseType } from "@/schemas/answer.schemas";
+import { AnswerStore } from "@/store/answer.store";
 
-type RenderQuestionProps = ItemQuestionType;
+type RenderQuestionProps = QuestionItemType;
 
-export const RenderQuestion = ({
-  question,
-  options,
-  uuid,
-}: RenderQuestionProps) => {
+export const RenderQuestion = ({ option, text, uuid }: RenderQuestionProps) => {
   // ---------------------------------------------------------------------------------------------------------------------
   const [typeOption, setTypeOption] = useState<checkEnum>();
   useEffect(() => {
-    options.filter((el) => el.isCurrentAnswer).length > 1
-      ? setTypeOption(checkEnum.CHECKBOX)
-      : setTypeOption(checkEnum.RADIO);
-  }, [options]);
+    const result =
+      option.filter((el) => el.isTrue).length > 1
+        ? checkEnum.CHECKBOX
+        : checkEnum.RADIO;
+    setTypeOption(result);
+  }, [option]);
 
   // ---------------------------------------------------------------------------------------------------------------------
 
-  const [answer, setAnswer] = useState<answerType>([]);
+  const [answer, setAnswer] = useState<AnswerOptionBaseType[]>([]);
+
   useEffect(() => {
-    const _answer_init = options.map(({ isCurrentAnswer, text, uuid }) => ({
-      isCurrentAnswer,
+    const _answer_init = option.map(({ isTrue, text, uuid }) => ({
+      isTrue,
       text,
       uuid,
-      isChecked: false,
+      isSelected: false,
     }));
     setAnswer(_answer_init);
-  }, [options]);
+  }, [option]);
 
   const { add } = AnswerStore();
 
   const answerAdapter = () => {
-    const _answer_array_adapter: answerType = answer.map(
-      ({ isChecked, isCurrentAnswer, text, uuid }) => ({
-        uuid,
-        text,
-        isCurrentAnswer,
-        isChecked,
-      })
-    );
-    const _answer_object_adapter = {
+    add({
       uuid,
-      question,
-      answer: _answer_array_adapter,
-    };
-    add(_answer_object_adapter);
+      text,
+      option: answer,
+    });
   };
 
   const handleChange = (uuid: string) => {
-
     const _new_answer = answer.map((el) =>
-      el.uuid == uuid ? { ...el, isChecked: !el.isChecked } : el
+      el.uuid == uuid ? { ...el, isSelected: !el.isSelected } : el
     );
     setAnswer(_new_answer);
   };
@@ -75,7 +64,7 @@ export const RenderQuestion = ({
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="capitilize">{question}</CardTitle>
+        <CardTitle className="capitilize">{text}</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         {typeOption == checkEnum.CHECKBOX &&
@@ -94,7 +83,7 @@ export const RenderQuestion = ({
           ))}
         {typeOption == checkEnum.RADIO && (
           <RadioGroup className="gap-4">
-            {options.map((item) => (
+            {option.map((item) => (
               <div key={item.uuid}>
                 <Label
                   htmlFor={item.uuid}

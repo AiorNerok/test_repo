@@ -1,17 +1,25 @@
 import { Button } from "@/components/ui/button";
-// import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-// import { cn } from "@/lib/utils";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 import { AnswerStore } from "@/store/answer.store";
-// import { CheckCircledIcon, Cross1Icon } from "@radix-ui/react-icons";
+import { CheckCircledIcon, Cross1Icon } from "@radix-ui/react-icons";
 import { useEffect, useState } from "react";
+
+import { AnswerOptionBaseToRenderType } from "@/schemas/answer.schemas";
 
 export const ResultStage = () => {
   const { list, timeDuration } = AnswerStore();
 
+  const [toRender, setToRender] = useState<>();
+
   const min = Math.floor(timeDuration / 60);
   const sec = timeDuration % 60;
 
-  useEffect(() => {}, [list]);
+  useEffect(() => {
+    const _list_new = list.map((el) =>
+      el.option.map((i) => ({ ...i, isSuccess: i.isTrue != i.isSelected }))
+    );
+  }, [list]);
 
   return (
     <div className="space-y-3">
@@ -25,7 +33,7 @@ export const ResultStage = () => {
         </p>
         <Button>Пройти еще раз</Button>
       </div>
-      {/* {list_to_render.map((el) => {
+      {list_to_render.map((el) => {
         return (
           <Card
             key={el.uuid}
@@ -62,7 +70,7 @@ export const ResultStage = () => {
             </CardContent>
           </Card>
         );
-      })} */}
+      })}
     </div>
   );
 };
