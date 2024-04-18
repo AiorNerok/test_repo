@@ -1,6 +1,19 @@
 import { z } from 'zod'
 
 // =====================================================================================================
+export const CheckNewQuestion = z.object({
+    uuid: z.string().uuid(),
+    text: z.string().trim().min(2, { message: 'text must more 2 chars' }),
+    option: z.object({
+        uuid: z.string().uuid(),
+        text: z.string().trim().min(2, { message: 'text option must more 2 chars' }),
+        isTrue: z.boolean(),
+        error: z.boolean().refine(v => v == false)
+    }).array().min(2)
+}).refine(
+    (d) => d.option.some(el => el.isTrue)
+)
+// =====================================================================================================
 export enum checkEnum {
     "CHECKBOX",
     "RADIO"

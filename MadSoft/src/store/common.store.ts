@@ -1,11 +1,11 @@
 import { create } from 'zustand'
-import { EmptyFunctionType, StageTestingType, StageEnum } from '@/schemas/common.schemas'
+import { EmptyFunctionType, stageTestingType, StageEnum } from '@/schemas/common.schemas'
 
 type CommonStoreType = {
     timer: number,
     setTimer: (n: number) => void,
 
-    Stage: StageTestingType,
+    Stage: stageTestingType,
     nextStage: EmptyFunctionType,
     resetStage: EmptyFunctionType
 }

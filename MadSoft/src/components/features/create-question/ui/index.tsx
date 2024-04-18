@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { v4 as uuidv4 } from "uuid";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useFieldArray, useForm, Controller, useWatch } from "react-hook-form";
+import { useFieldArray, useForm, Controller, useWatch, useFormState } from "react-hook-form";
 import { toast } from "sonner";
 import { TrashIcon } from "@radix-ui/react-icons";
 
@@ -10,6 +10,9 @@ import {
   TextSchemas,
   ForCreateQuestionType,
   ForCreateQuestionSchemas,
+  QuestionListSchemas,
+  QuestionListType,
+  QuestionListItemSchemas,
 } from "@/schemas/questions.schemas";
 import { QuestionStore } from "@/store/questions.store";
 
@@ -25,12 +28,13 @@ import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
+import { CheckNewQuestion } from "@/schemas/common.schemas";
 
 export const CreateQuestion = () => {
   const navigate = useNavigate();
   const [isDisableAddOption, setIsDisableAddOption] = useState<boolean>(false);
-  const [isDisableCreateButton, setIsDisableCreateButton] =
-    useState<boolean>(true);
+  const [isDisableCreate, setIsDisableCreate] = useState<boolean>(true);
+
   const { questions, addNewQuestion } = QuestionStore();
 
   const form = useForm<ForCreateQuestionType>({
@@ -47,10 +51,18 @@ export const CreateQuestion = () => {
     name: "option",
   });
 
+
   // ############################## CHECKING VALUES ##############################
   const questionText = useWatch({ control: form.control, name: "text" });
   const questionOption = useWatch({ control: form.control, name: "option" });
 
+  useEffect(() => {
+    const res = CheckNewQuestion.safeParse(form.getValues())
+
+    setIsDisableCreate(
+      !res.success
+    )
+  }, [questionOption, questionText])
   // ################################# HANDLERS ##################################
   const isUniqueValue = (t: string) => {
     return questionOption.some(
@@ -77,20 +89,22 @@ export const CreateQuestion = () => {
     result ? setIsDisableAddOption(false) : setIsDisableAddOption(true);
   }, [questionOption]);
 
-  useEffect(() => {
-    const main_check = ForCreateQuestionSchemas.safeParse(form.getValues());
-    console.log(main_check, "main_check");
-    setIsDisableCreateButton(!main_check.success);
-  }, [questionText, questionOption, form, isDisableAddOption]);
-
   const AddNewQuestion = () => {
     const data = form.getValues();
 
-    const result = questions.some(
-      (el) => el.text.trim().toLowerCase() == data.text.trim().toLowerCase()
-    );
+    const _data = {
+      uuid: data.uuid,
+      text: data.text,
+    }
 
-    if (result) {
+    const option = data.option.map(({ uuid, text, isTrue }) => ({ uuid, text, isTrue }))
+    const _new_data: QuestionListType = {
+      ..._data,
+      option: option
+    }
+    const result = QuestionListItemSchemas.safeParse(_new_data)
+
+    if (!result.success) {
       toast.error("ERROR!!! Такой вопрос уже существует");
     } else {
       const _data_option = data.option.map(({ isTrue, text, uuid }) => ({
@@ -202,7 +216,7 @@ export const CreateQuestion = () => {
         <Button
           type="submit"
           className="w-full"
-          disabled={isDisableCreateButton}
+          disabled={isDisableCreate}
           onClick={() => {
             AddNewQuestion();
           }}

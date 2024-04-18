@@ -60,7 +60,8 @@ export type ForCreateQuestionType = z.infer<typeof ForCreateQuestionSchemas>
 export type CreateNewQuestionType = z.infer<typeof CreateNewQuestionSchemas>
 
 export const QuestionListSchemas = QuestionItemSchemas.array()
-export type QuestionListType = z.infer<typeof QuestionListSchemas>
+export const QuestionListItemSchemas = QuestionItemSchemas
+export type QuestionListType = z.infer<typeof QuestionListItemSchemas>
 
-export const AppendNewQuestionStoreSchemas = z.function().args(CreateNewQuestionSchemas).returns(z.void())
+export const AppendNewQuestionStoreSchemas = z.function().args(QuestionListItemSchemas).returns(z.void())
 export type AppendNewQuestionStoreType = z.infer<typeof AppendNewQuestionStoreSchemas>
