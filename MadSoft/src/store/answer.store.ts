@@ -1,5 +1,5 @@
 import type { answerTestType, setAnswerHandlerType } from "@/schemas/answer.schemas"
-import { answerSchemas } from "@/schemas/answer.schemas"
+import { answerTestSchemas } from "@/schemas/answer.schemas"
 import { create } from "zustand"
 
 type AnswerStoreProps = {
@@ -8,20 +8,19 @@ type AnswerStoreProps = {
     drop: () => void
 }
 
-export const AnswerStore = create<AnswerStoreProps>()((set) => ({
+export const AnswerStore = create<AnswerStoreProps>()((set, get) => ({
     list: [],
-    add: (item) => (() => {
-        const _new_list = []
-        console.log("store.nswer", item)
-        const result = answerSchemas.safeParse(item)
+    add: (item) => {
+        const _list = get().list
+        const result = answerTestSchemas.safeParse(item)
 
         if (result.success) {
-            _new_list.push(item)
+            console.log(item)
 
-            return {
-                answerList: _new_list
-            }
+            set({
+                list: [..._list, item]
+            })
         }
-    }),
+    },
     drop: () => set({ list: [] })
 }))

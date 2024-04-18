@@ -1,8 +1,10 @@
-import { NextStageToggle, SetTime } from "@/components/features"
+import { NextStageToggle, SetTime } from "@/components/features";
 
 export const PreparationStage = () => {
-    return <div>
-        <SetTime />
-        <NextStageToggle title="Начать тест" />
+  return (
+    <div>
+      <SetTime />
+      <NextStageToggle title="Начать тест" />
     </div>
-}
+  );
+};

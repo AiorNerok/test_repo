@@ -1,11 +1,11 @@
 import { create } from 'zustand'
-import { EmptyFunctionType, stageTestingType, stageEnum } from '@/schemas/common.schemas'
+import { EmptyFunctionType, StageTestingType, StageEnum } from '@/schemas/common.schemas'
 
 type CommonStoreType = {
     timer: number,
     setTimer: (n: number) => void,
 
-    stage: stageTestingType,
+    Stage: StageTestingType,
     nextStage: EmptyFunctionType,
     resetStage: EmptyFunctionType
 }
@@ -16,18 +16,18 @@ export const CommonStore = create<CommonStoreType>()((set, get) => ({
         timer: n
     })),
 
-    stage: stageEnum.PREPARATION,
+    Stage: StageEnum.PREPARATION,
     nextStage: () => {
-        const current = get().stage
+        const current = get().Stage
         const next = current + 1
 
         if (next != undefined) {
             set({
-                stage: next
+                Stage: next
             })
         }
     },
     resetStage: () => set({
-        stage: stageEnum.PREPARATION
+        Stage: StageEnum.PREPARATION
     })
 }))

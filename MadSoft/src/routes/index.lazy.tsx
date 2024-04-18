@@ -1,18 +1,21 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
 
 import { CommonStore } from "@/store/common.store";
-import { stageEnum } from "@/schemas/common.schemas";
-
-import { PreparationStage, TestingStage } from "@/components/widget";
+import { StageEnum } from "@/schemas/common.schemas";
+import {
+  PreparationStage,
+  ResultStage,
+  TestingStage,
+} from "@/components/widget";
 
 export const Route = createLazyFileRoute("/")({ component: Index });
 function Index() {
-  const { stage } = CommonStore()
+  const { Stage } = CommonStore();
   return (
     <>
-      {stage == stageEnum.PREPARATION && <PreparationStage />}
-      {stage == stageEnum.TESTING && <TestingStage />}
-      {stage == stageEnum.RESULT && <div>Result</div>}
+      {Stage == StageEnum.PREPARATION && <PreparationStage />}
+      {Stage == StageEnum.TESTING && <TestingStage />}
+      {Stage == StageEnum.RESULT && <ResultStage />}
     </>
   );
 }

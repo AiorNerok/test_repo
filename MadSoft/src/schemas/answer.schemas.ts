@@ -6,6 +6,8 @@ const uuid = z.string().uuid()
 // ================================================================
 export const answerSchemas = z.object({
     uuid: z.string().uuid(),
+    text: z.string().trim().min(2),
+    isCurrentAnswer: z.boolean(),
     isChecked: z.boolean()
 }).array()
 
@@ -13,6 +15,7 @@ export type answerType = z.infer<typeof answerSchemas>
 
 export const answerTestSchemas = z.object({
     uuid,
+    question: z.string(),
     answer: answerSchemas
 })
 // ================================================================
