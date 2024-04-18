@@ -18,6 +18,15 @@ export const TestingStage = () => {
   const { minutes, seconds, pause, totalSeconds } = useTimer({
     expiryTimestamp: time,
   });
+
+  useEffect(() => {
+    if (!minutes && !seconds) {
+      pause();
+      setTimeDuration(timer * 60 - totalSeconds);
+      nextStage();
+    }
+  }, [minutes, seconds])
+
   //----------------------------------------------------------------------------------------------
   const [currentQuestion, setCurrentQuestion] = useState<number>(0);
 
