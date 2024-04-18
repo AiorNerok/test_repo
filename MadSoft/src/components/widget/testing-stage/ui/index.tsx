@@ -11,20 +11,20 @@ import { AnswerStore } from "@/store/answer.store";
 export const TestingStage = () => {
   const { timer, nextStage } = CommonStore();
   const { questions } = QuestionStore();
-  const { list } = AnswerStore();
+  const { list, setTimeDuration } = AnswerStore();
   //----------------------------------------------------------------------------------------------
   const time = new Date();
-  time.setSeconds(timer * 60);
-  const {
-    minutes,
-    seconds,
-    //  isRunning, pause, totalSeconds
-  } = useTimer({ expiryTimestamp: time });
+  time.setSeconds(time.getSeconds() + timer * 60);
+  const { minutes, seconds, pause, totalSeconds } = useTimer({
+    expiryTimestamp: time,
+  });
   //----------------------------------------------------------------------------------------------
   const [currentQuestion, setCurrentQuestion] = useState<number>(0);
 
   useEffect(() => {
     if (questions.length == list.length) {
+      pause();
+      setTimeDuration(timer * 60 - totalSeconds);
       nextStage();
     } else if (questions.length > list.length) {
       setCurrentQuestion(list.length);

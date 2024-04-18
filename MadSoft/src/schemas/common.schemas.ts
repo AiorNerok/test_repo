@@ -22,5 +22,8 @@ export type stageTestingType = z.infer<typeof stageTestingSchemas>;
 export const EmptyFunctionSchemas = z.function().returns(z.void())
 export type EmptyFunctionType = z.infer<typeof EmptyFunctionSchemas>
 // =====================================================================================================
+export const TimeDurationSchemas = z.number().positive()
+export type TimeDurationType = z.infer<typeof TimeDurationSchemas>
 
-
+export const SetTimeDurationSchemas = z.function().args(TimeDurationSchemas).returns(z.void())
+export type SetTimeDurationType = z.infer<typeof SetTimeDurationSchemas>

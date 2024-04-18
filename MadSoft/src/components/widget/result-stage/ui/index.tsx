@@ -1,23 +1,68 @@
+import { Button } from "@/components/ui/button";
+// import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+// import { cn } from "@/lib/utils";
 import { AnswerStore } from "@/store/answer.store";
+// import { CheckCircledIcon, Cross1Icon } from "@radix-ui/react-icons";
+import { useEffect, useState } from "react";
 
 export const ResultStage = () => {
-  const { list } = AnswerStore();
+  const { list, timeDuration } = AnswerStore();
 
-  //   return <div>{JSON.stringify(list[0], null, 4)}</div>;
+  const min = Math.floor(timeDuration / 60);
+  const sec = timeDuration % 60;
+
+  useEffect(() => {}, [list]);
+
   return (
-    <div>
-      {list.map((el) => {
+    <div className="space-y-3">
+      <div>
+        <p>
+          Венро отвечено на: {} / {list.length}{" "}
+        </p>
+        <p>
+          Время прохождение теста:{" "}
+          {`${min > 9 ? min : "0" + min} : ${sec > 9 ? sec : "0" + sec}`}
+        </p>
+        <Button>Пройти еще раз</Button>
+      </div>
+      {/* {list_to_render.map((el) => {
         return (
-          <div key={el.uuid}>
-            {el.question}
-            <ul>
-              {el.answer.map(({ text, uuid }) => {
-                return <div key={uuid}>{text}</div>;
+          <Card
+            key={el.uuid}
+            className={cn({
+              "border-green-300": el.isSuccess,
+              "border-red-300": !el.isSuccess,
+            })}
+          >
+            <CardHeader>
+              <CardTitle>{el.question}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              {el.answer.map(({ text, uuid, isChecked, isCurrentAnswer }) => {
+                return (
+                  <p
+                    className={cn("flex gap-2 items-center", {
+                      "text-green-400": isCurrentAnswer,
+                      "text-red-600":
+                        isChecked == true && isCurrentAnswer == false,
+                    })}
+                    key={uuid}
+                  >
+                    {text}
+
+                    {isChecked == true && isCurrentAnswer == true && (
+                      <CheckCircledIcon />
+                    )}
+                    {isChecked == true && isCurrentAnswer == false && (
+                      <Cross1Icon className="text-red-600" />
+                    )}
+                  </p>
+                );
               })}
-            </ul>
-          </div>
+            </CardContent>
+          </Card>
         );
-      })}
+      })} */}
     </div>
   );
 };

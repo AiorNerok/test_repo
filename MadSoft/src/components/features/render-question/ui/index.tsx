@@ -65,7 +65,7 @@ export const RenderQuestion = ({
   };
 
   const handleChange = (uuid: string) => {
-    console.log("click", uuid);
+
     const _new_answer = answer.map((el) =>
       el.uuid == uuid ? { ...el, isChecked: !el.isChecked } : el
     );
@@ -103,10 +103,10 @@ export const RenderQuestion = ({
                       if (el.uuid == item.uuid) {
                         return {
                           ...el,
-                          isCurrentAnswer: true,
+                          isChecked: true,
                         };
                       } else {
-                        return { ...el, isCurrentAnswer: false };
+                        return { ...el, isChecked: false };
                       }
                     });
                     setAnswer(_new_answer);
@@ -124,6 +124,7 @@ export const RenderQuestion = ({
       <CardFooter>
         <Button onClick={answerAdapter}>Ответить</Button>
       </CardFooter>
+      {/* {JSON.stringify(answer)} */}
     </Card>
   );
 };
