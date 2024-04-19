@@ -8,7 +8,6 @@ import { useEffect, useState } from "react";
 
 import { AnswerOptionToRenderType } from "@/schemas/answer.schemas";
 
-
 export const ResultStage = () => {
   const { list, timeDuration, drop } = AnswerStore();
   const { resetStage } = CommonStore()
